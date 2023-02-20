@@ -14,12 +14,6 @@ api_key = "KE9G7lVZwm7soA1SuaQc61DnUAyrFxNI56Q5e2SsiXaX2UKvYVGXcaNHrJrqNful"
 # '0x306b1ea3ecdf94aB739F1910bbda052Ed4A9f949'- beanz - eth
 
 
-# contractAddresses = {
-#     'bsc':['0x50332bdca94673F33401776365b66CC4e81aC81d'],
-#     'cronos': ['0xea1635a0e9344d933df42c0fd494d39bce865dc4'],
-#     'eth': ['0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB','0x314a2F0311D184d4C5529da578390F5bED45f865','0x306b1ea3ecdf94aB739F1910bbda052Ed4A9f949']
-# }
-
 # collections
 collections = {
     'bsc': ['cryptocards'],
@@ -67,26 +61,15 @@ channel.queue_bind(exchange='nfts-exchange',
 results = []
 
 try:
-    # for chain in contractAddresses:
-    #     params['chain'] = chain
-    #     for address in contractAddresses[chain]:
-    #         params['address'] = address
-    #         print("Params: ", json.dumps(params, sort_keys=True, indent=4))
-    #         results += [evm_api.nft.get_wallet_nfts(
-    #             api_key=api_key,
-    #             params=params,
-    #         )]
-    #         print("Partial: ", json.dumps(results, sort_keys=True, indent=4))
     for chain in collections:
         params['chain'] = chain
         for collectionName in collections[chain]:
             params['q'] = collectionName
-            print("Params: ", json.dumps(params, sort_keys=True, indent=4))
+            # print("Params: ", json.dumps(params, sort_keys=True, indent=4))
             results += [evm_api.nft.search_nfts(
                 api_key=api_key,
                 params=params,
             )]
-            print("Partial: ", json.dumps(results, sort_keys=True, indent=4))
 
 except Exception as e:
     print("Exception collecting data from Moralis API:",
@@ -98,7 +81,7 @@ for nftMetada in results:
         nfmInfo = {
             "nftInfo": res
         }
-        print('sending to message queue')
+        # print('sending to message queue')
         channel.basic_publish(exchange='nfts-exchange',
                               routing_key='nfts-route',
                               body=json.dumps(nfmInfo))
